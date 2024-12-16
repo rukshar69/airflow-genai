@@ -1,10 +1,12 @@
 "use client";
 import { useState } from "react";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
   const [file, setFile] = useState(null);
   const [message, setMessage] = useState("");
+  const router = useRouter();
 
   const handleFileChange = (event) => {
     setFile(event.target.files[0]);
@@ -27,12 +29,16 @@ export default function Home() {
           "Content-Type": "multipart/form-data",
         },
       });
-      setMessage(response.data.message + ' '+ response.data.filename);
+      setMessage(response.data.message + " " + response.data.filename);
     } catch (error) {
       setMessage(
         error.response?.data?.detail || "An error occurred while uploading the file."
       );
     }
+  };
+
+  const navigateToSummaryPage = () => {
+    router.push("/summary");
   };
 
   return (
@@ -53,11 +59,17 @@ export default function Home() {
           </div>
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline"
+            className="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline mb-4"
           >
             Upload
           </button>
         </form>
+        <button
+          onClick={navigateToSummaryPage}
+          className="w-full bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-700 focus:outline-none focus:shadow-outline"
+        >
+          View Summaries
+        </button>
         {message && (
           <div className="mt-4 p-2 bg-gray-200 text-center rounded text-sm text-gray-700">
             {message}
